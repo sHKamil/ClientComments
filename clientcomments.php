@@ -9,7 +9,6 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-// require_once(_PS_MODULE_DIR_ . 'clientcomments/sql/ClientcommentsModel.php');
 
 use Prestashop\Module\Clientcomments\Classes\ClientcommentsModel;
 
@@ -32,18 +31,14 @@ class Clientcomments extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Client Comments');
-        $this->description = $this->l('Displays added text as comments on home page.');
+        $this->displayName = $this->l('Client Comments & About Section');
+        $this->description = $this->l('With this module you can add comments that will be visible on home page aswell as about section. Create your own About + customer comments seciton.');
 
         $this->confirmUninstall = $this->l('You will lose all data of this module (added comments).');
 
         $this->ps_versions_compliancy = ['min' => '1.6', 'max' => _PS_VERSION_];
     }
 
-    /**
-     * Don't forget to create update methods if needed:
-     * http://doc.prestashop.com/display/PS16/Enabling+the+Auto-Update
-     */
     public function install()
     {
         Configuration::updateValue('CLIENTCOMMENTS_LIVE_MODE', false);
@@ -67,6 +62,7 @@ class Clientcomments extends Module
         Configuration::deleteByName('CLIENTCOMMENTS_ABOUT_TITLE');
         Configuration::deleteByName('CLIENTCOMMENTS_ABOUT');
         Configuration::deleteByName('CLIENTCOMMENTS_COMMENTS_TITLE');
+
         include(dirname(__FILE__).'/sql/uninstall.php');
 
         return parent::uninstall();
@@ -81,12 +77,12 @@ class Clientcomments extends Module
          * If values have been submitted in the form, process.
          */
         if (((bool)Tools::isSubmit('submitClientcommentsModule')) == true) {
-            $this->postProcess();
+            $this->postProcess(); // Save all configuration data
         }
         if (((bool)Tools::isSubmit('submitNewCommentsForm')) == true) {
-            ClientcommentsModel::saveComment($_POST['new_client_name'], $_POST['new_comment']);
+            ClientcommentsModel::saveComment($_POST['new_client_name'], $_POST['new_comment']); // Save new comment
         }
-        if (((bool)Tools::isSubmit('submitCommentsForm')) == true) {
+        if (((bool)Tools::isSubmit('submitCommentsForm')) == true) { // Set to active comments marked as active and delete some comments if selected to delete
             $this->activateComments($_POST['switch_comments']);
             if(!empty($_POST['delete_comments'])) {
                 foreach ($_POST['delete_comments'] as $key => $id) {
@@ -106,7 +102,7 @@ class Clientcomments extends Module
     }
 
     /**
-     * Create the form that will be displayed in the configuration of your module.
+     * Create the form that will be displayed in configuration of the module.
      */
     protected function renderForm()
     {
@@ -126,7 +122,7 @@ class Clientcomments extends Module
         $linkCore = new LinkCore;
 
         $helper->tpl_vars = [
-            'fields_value' => $this->getConfigFormValues(), /* Add values for your inputs */
+            'fields_value' => $this->getConfigFormValues(), /* Add values for inputs */
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id,
             'controller' => $linkCore->getAdminLink('CommentListController')
@@ -135,9 +131,6 @@ class Clientcomments extends Module
         return $helper->generateForm([$this->getConfigForm()]);
     }
 
-    /**
-     * Create the structure of your form.
-     */
     protected function getConfigForm()
     {
         return [
@@ -278,17 +271,6 @@ class Clientcomments extends Module
     {
         $this->context->controller->addJS($this->_path.'/views/js/front.js');
         $this->context->controller->addCSS($this->_path.'/views/css/front.css');
-    }
-
-    public function hookActionBackControllerSetMedia()
-    {
-        $this->context->controller->registerJavascript(
-            'backJS',
-            'modules/' . $this->name . '/views/js/back.js',
-            [
-                'type' => 'module'
-            ]
-        );
     }
 
     public function hookDisplayHome()

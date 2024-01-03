@@ -11,7 +11,7 @@ type comment = {
     active: number
 }
 
-async function ajaxAPI(url: string, method: string, data?: any) {   
+async function fetchAPI(url: string, method: string, data?: any) {   
     try {
         const response = await fetch(
             url,
@@ -45,7 +45,7 @@ const setActiveSwitch = (id: number) => {
     toActivate.checked = true;
 }
 
-let response = ajaxAPI('/module/clientcomments/GatherComments?method=getActiveJSON', 'GET');
+let response = fetchAPI('/module/clientcomments/GatherComments?method=getActiveJSON', 'GET');
 
 response.then((comments) => {
     comments.forEach((el: comment) => {

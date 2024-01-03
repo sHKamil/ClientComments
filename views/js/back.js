@@ -4,7 +4,7 @@
 *  @copyright sHKamil - Kamil Hałasa
 *  @license   .l
 */
-async function ajaxAPI(url, method, data) {
+async function fetchAPI(url, method, data) {
     try {
         const response = await fetch(url, {
             method: method,
@@ -32,7 +32,7 @@ const setActiveSwitch = (id) => {
     let toActivate = document.getElementById(id.toString());
     toActivate.checked = true;
 };
-let response = ajaxAPI('/module/clientcomments/GatherComments?method=getActiveJSON', 'GET');
+let response = fetchAPI('/module/clientcomments/GatherComments?method=getActiveJSON', 'GET');
 response.then((comments) => {
     comments.forEach((el) => {
         setActiveSwitch(el.id_clientcomments);

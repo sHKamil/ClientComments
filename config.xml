@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>clientcomments</name>
+    <displayName><![CDATA[Client Comments & About Section]]></displayName>
+    <version><![CDATA[1.0.0]]></version>
+    <description><![CDATA[With this module you can add comments that will be visible on home page aswell as about section. Create your own About + customer comments seciton.]]></description>
+    <author><![CDATA[sHKamil - Kamil Hałasa]]></author>
+    <tab><![CDATA[front_office_features]]></tab>
+	<confirmUninstall><![CDATA[You will lose all data of this module (added comments, about section).]]></confirmUninstall>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+</module>
